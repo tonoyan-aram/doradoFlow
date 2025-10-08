@@ -22,7 +22,7 @@ class DoradoFlowApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNgit add .avigationBarThemeData(
           backgroundColor: Colors.white,
           selectedItemColor: Color(0xFF6366F1),
           unselectedItemColor: Colors.grey,
