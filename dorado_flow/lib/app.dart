@@ -22,7 +22,7 @@ class DoradoFlowApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        bottomNavigationBarTheme: const BottomNgit add .avigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Colors.white,
           selectedItemColor: Color(0xFF6366F1),
           unselectedItemColor: Colors.grey,
@@ -32,15 +32,9 @@ class DoradoFlowApp extends StatelessWidget {
           backgroundColor: Color(0xFF6366F1),
           foregroundColor: Colors.white,
         ),
-        cardTheme: const CardThemeData(
-          elevation: 0,
-          color: Colors.white,
-        ),
+        cardTheme: const CardThemeData(elevation: 0, color: Colors.white),
         inputDecorationTheme: const InputDecorationTheme(
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
       home: const MainScreen(),
