@@ -24,7 +24,7 @@ class DoradoFlowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dorado Flow',
+      title: 'Chicken Cluck',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,

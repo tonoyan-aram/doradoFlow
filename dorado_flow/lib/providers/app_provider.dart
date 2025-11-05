@@ -17,6 +17,9 @@ class AppProvider extends ChangeNotifier {
   List<Idea> _ideas = [];
   List<Task> _tasks = [];
   bool _isLoading = false;
+  bool _isDarkMode = false;
+  String _searchQuery = '';
+  String _selectedFilter = 'all';
 
   // Getters
   List<Project> get projects => _projects;
@@ -27,6 +30,9 @@ class AppProvider extends ChangeNotifier {
   List<Idea> get ideas => _ideas;
   List<Task> get tasks => _tasks;
   bool get isLoading => _isLoading;
+  bool get isDarkMode => _isDarkMode;
+  String get searchQuery => _searchQuery;
+  String get selectedFilter => _selectedFilter;
 
   // Project statistics
   int get totalProjects => _projects.length;
@@ -61,8 +67,8 @@ class AppProvider extends ChangeNotifier {
 
   // Knowledge statistics
   int get totalKnowledgeArticles => _knowledgeArticles.length;
-  int get favoriteArticles => _knowledgeArticles.where((a) => a.isFavorite).length;
-  int get bookmarkedArticles => _knowledgeArticles.where((a) => a.isBookmarked).length;
+  int get favoriteArticlesCount => _knowledgeArticles.where((a) => a.isFavorite).length;
+  int get bookmarkedArticlesCount => _knowledgeArticles.where((a) => a.isBookmarked).length;
 
   // Event statistics
   int get totalEvents => _events.length;
@@ -378,4 +384,32 @@ class AppProvider extends ChangeNotifier {
     _isLoading = loading;
     notifyListeners();
   }
+
+  // Theme methods
+  void toggleDarkMode() {
+    _isDarkMode = !_isDarkMode;
+    notifyListeners();
+  }
+
+  // Search methods
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
+
+  void clearSearch() {
+    _searchQuery = '';
+    notifyListeners();
+  }
+
+  // Filter methods
+  void setFilter(String filter) {
+    _selectedFilter = filter;
+    notifyListeners();
+  }
+
+  // Get all favorites
+  List<Idea> get favoriteIdeas => _ideas.where((i) => i.isFavorite).toList();
+  List<KnowledgeArticle> get favoriteArticles => _knowledgeArticles.where((a) => a.isFavorite).toList();
+  List<KnowledgeArticle> get bookmarkedArticles => _knowledgeArticles.where((a) => a.isBookmarked).toList();
 }

@@ -24,18 +24,21 @@ class DashboardScreen extends StatelessWidget {
                 pinned: true,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                flexibleSpace: FlexibleSpaceBar(
+                  flexibleSpace: FlexibleSpaceBar(
                   background: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Color(0xFF6366F1), Color(0xFFEC4899)],
+                        colors: [
+                          Theme.of(context).colorScheme.primary,
+                          Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: const SafeArea(
+                    child: SafeArea(
                       child: Padding(
-                        padding: EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(24),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -44,14 +47,16 @@ class DashboardScreen extends StatelessWidget {
                               'Welcome!',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 24,
+                                fontSize: 28,
                                 fontWeight: FontWeight.bold,
+                                letterSpacing: -0.5,
                               ),
                             ),
+                            const SizedBox(height: 8),
                             Text(
-                              'Your creative projects',
+                              'Your creative workspace',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.white.withOpacity(0.9),
                                 fontSize: 16,
                               ),
                             ),
@@ -66,7 +71,7 @@ class DashboardScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
-                    _buildWelcomeCard(),
+                    _buildWelcomeCard(context),
                     const SizedBox(height: 24),
                     _buildStatsRow(context, appProvider),
                     const SizedBox(height: 24),
@@ -85,18 +90,28 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWelcomeCard() {
+  Widget _buildWelcomeCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF6366F1), Color(0xFFEC4899)],
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primary.withOpacity(0.8),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
-      child: const Row(
+      child: Row(
         children: [
           Expanded(
             child: Column(
@@ -106,19 +121,30 @@ class DashboardScreen extends StatelessWidget {
                   'Today is a great day for creativity!',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: -0.5,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Ready to create something new?',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 14,
+                  ),
                 ),
               ],
             ),
           ),
-          Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 32),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 32),
+          ),
         ],
       ),
     );
@@ -129,6 +155,7 @@ class DashboardScreen extends StatelessWidget {
       children: [
         Expanded(
           child: _buildStatCard(
+            context,
             '${appProvider.totalProjects}',
             'Projects',
             Icons.folder_special_rounded,
@@ -138,6 +165,7 @@ class DashboardScreen extends StatelessWidget {
         const SizedBox(width: 16),
         Expanded(
           child: _buildStatCard(
+            context,
             '${appProvider.completedProjects}',
             'Completed',
             Icons.check_circle_rounded,
@@ -147,6 +175,7 @@ class DashboardScreen extends StatelessWidget {
         const SizedBox(width: 16),
         Expanded(
           child: _buildStatCard(
+            context,
             '${appProvider.upcomingDeadlines}',
             'Deadlines',
             Icons.schedule_rounded,
@@ -157,16 +186,16 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String value, String label, IconData icon, Color color) {
+  Widget _buildStatCard(BuildContext context, String value, String label, IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
@@ -174,23 +203,35 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                colors: [color.withOpacity(0.2), color.withOpacity(0.1)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: color, size: 24),
+            child: Icon(icon, color: color, size: 28),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
             value,
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
@@ -256,22 +297,41 @@ class DashboardScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.2)),
+          gradient: LinearGradient(
+            colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withOpacity(0.3), width: 1.5),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withOpacity(0.3),
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Icon(icon, color: Colors.white, size: 24),
+            ),
+            const SizedBox(height: 12),
             Text(
               title,
               style: TextStyle(
                 color: color,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.center,
             ),

@@ -14,6 +14,7 @@ import 'screens/projects_screen.dart';
 import 'screens/content_screen.dart';
 import 'screens/locations_screen.dart';
 import 'screens/knowledge_screen.dart';
+import 'screens/favorites_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -24,6 +25,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  final TextEditingController _searchController = TextEditingController();
 
   final List<Widget> _screens = [
     const DashboardScreen(),
@@ -56,10 +58,12 @@ class _MainScreenState extends State<MainScreen> {
   void _showQuickAddDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -73,51 +77,45 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'Quick Add',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.titleLarge?.color,
+              ),
             ),
             const SizedBox(height: 24),
-            Row(
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 2,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 1.2,
               children: [
-                Expanded(
-                  child: _buildQuickAddOption(
-                    icon: Icons.event_rounded,
-                    title: 'Event',
-                    color: Colors.blue,
-                    onTap: () => _createEvent(context),
-                  ),
+                _buildQuickAddOption(
+                  icon: Icons.event_rounded,
+                  title: 'Event',
+                  color: const Color(0xFF3B82F6),
+                  onTap: () => _createEvent(context),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildQuickAddOption(
-                    icon: Icons.note_add_rounded,
-                    title: 'Note',
-                    color: Colors.green,
-                    onTap: () => _createNote(context),
-                  ),
+                _buildQuickAddOption(
+                  icon: Icons.note_add_rounded,
+                  title: 'Note',
+                  color: const Color(0xFF10B981),
+                  onTap: () => _createNote(context),
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildQuickAddOption(
-                    icon: Icons.lightbulb_rounded,
-                    title: 'Idea',
-                    color: Colors.orange,
-                    onTap: () => _createIdea(context),
-                  ),
+                _buildQuickAddOption(
+                  icon: Icons.lightbulb_rounded,
+                  title: 'Idea',
+                  color: const Color(0xFFF59E0B),
+                  onTap: () => _createIdea(context),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildQuickAddOption(
-                    icon: Icons.task_rounded,
-                    title: 'Task',
-                    color: Colors.purple,
-                    onTap: () => _createTask(context),
-                  ),
+                _buildQuickAddOption(
+                  icon: Icons.task_rounded,
+                  title: 'Task',
+                  color: const Color(0xFF8B5CF6),
+                  onTap: () => _createTask(context),
                 ),
               ],
             ),
@@ -137,29 +135,41 @@ class _MainScreenState extends State<MainScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.2)),
+          gradient: LinearGradient(
+            colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: color.withOpacity(0.3), width: 1.5),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: color,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              child: Icon(icon, color: Colors.white, size: 24),
+              child: Icon(icon, color: Colors.white, size: 28),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               title,
               style: TextStyle(
                 color: color,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
@@ -176,9 +186,6 @@ class _MainScreenState extends State<MainScreen> {
     _showCreateLocationQuickDialog(context);
   }
 
-  void _showSearchDialog(BuildContext context) {
-    _showSearchQuickDialog(context);
-  }
 
   void _createEvent(BuildContext context) async {
     // Get provider reference before any async operations
@@ -680,71 +687,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void _showSearchQuickDialog(BuildContext context) {
-    final searchController = TextEditingController();
-    String selectedCategory = 'All';
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Search'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search query',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
-              ),
-              autofocus: true,
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: selectedCategory,
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
-              ),
-              items: ['All', 'Projects', 'Locations', 'Knowledge'].map((
-                category,
-              ) {
-                return DropdownMenuItem(value: category, child: Text(category));
-              }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  selectedCategory = value;
-                }
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (searchController.text.trim().isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Searching for "${searchController.text.trim()}" in $selectedCategory',
-                    ),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Search'),
-          ),
-        ],
-      ),
-    );
-  }
 
   String _getProjectTypeName(ProjectType type) {
     switch (type) {
@@ -982,40 +924,188 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appProvider = Provider.of<AppProvider>(context);
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _screens),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_rounded),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.folder_special_rounded),
-            label: 'Projects',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.content_copy_rounded),
-            label: 'Content',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_on_rounded),
-            label: 'Locations',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_rounded),
-            label: 'Knowledge',
+      drawer: _buildDrawer(context, appProvider),
+      appBar: AppBar(
+        title: _buildSearchBar(context, appProvider),
+        actions: [
+          IconButton(
+            icon: Icon(appProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded),
+            onPressed: () => appProvider.toggleDarkMode(),
+            tooltip: 'Toggle theme',
           ),
         ],
+      ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_rounded),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.folder_special_rounded),
+              label: 'Projects',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.content_copy_rounded),
+              label: 'Content',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.location_on_rounded),
+              label: 'Locations',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_book_rounded),
+              label: 'Knowledge',
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _onFabTap(context),
         child: const Icon(Icons.add_rounded),
+      ),
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context, AppProvider appProvider) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(
+                  Icons.auto_awesome_rounded,
+                  size: 48,
+                  color: Colors.white,
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Chicken Cluck',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  'Your creative workspace',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.favorite_rounded),
+            title: const Text('Favorites'),
+            subtitle: Text('${appProvider.favoriteIdeas.length} ideas, ${appProvider.favoriteArticlesCount} articles'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.bookmark_rounded),
+            title: const Text('Bookmarks'),
+            subtitle: Text('${appProvider.bookmarkedArticlesCount} articles'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: Icon(appProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded),
+            title: Text(appProvider.isDarkMode ? 'Light Mode' : 'Dark Mode'),
+            onTap: () {
+              appProvider.toggleDarkMode();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings_rounded),
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildSearchBar(BuildContext context, AppProvider appProvider) {
+    final searchQuery = appProvider.searchQuery;
+    if (_searchController.text != searchQuery) {
+      _searchController.text = searchQuery;
+    }
+    return Container(
+      height: 40,
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey[800]
+            : Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TextField(
+        controller: _searchController,
+        onChanged: (value) => appProvider.setSearchQuery(value),
+        decoration: InputDecoration(
+          hintText: 'Search...',
+          prefixIcon: const Icon(Icons.search_rounded, size: 20),
+          suffixIcon: searchQuery.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear_rounded, size: 20),
+                  onPressed: () {
+                    _searchController.clear();
+                    appProvider.clearSearch();
+                  },
+                )
+              : null,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        ),
       ),
     );
   }
