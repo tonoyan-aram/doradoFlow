@@ -8,6 +8,11 @@ import '../models/task.dart';
 import '../providers/app_provider.dart';
 import 'create_event_screen.dart';
 
+const _dashPurple = Color(0xFF7C3AED);
+const _dashOrange = Color(0xFFFF9F45);
+const _dashGold = Color(0xFFFFE066);
+const _dashGreen = Color(0xFF12D18F);
+
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
@@ -16,6 +21,7 @@ class DashboardScreen extends StatelessWidget {
     return Consumer<AppProvider>(
       builder: (context, appProvider, child) {
         return Scaffold(
+          backgroundColor: Colors.transparent,
           body: CustomScrollView(
             slivers: [
               SliverAppBar(
@@ -29,8 +35,8 @@ class DashboardScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Theme.of(context).colorScheme.primary,
-                          Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                          _dashGreen.withOpacity(0.8),
+                          _dashPurple.withOpacity(0.95),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -96,8 +102,8 @@ class DashboardScreen extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.primary.withOpacity(0.8),
+            _dashPurple,
+            _dashOrange,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -121,8 +127,8 @@ class DashboardScreen extends StatelessWidget {
                   'Today is a great day for creativity!',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -159,7 +165,7 @@ class DashboardScreen extends StatelessWidget {
             '${appProvider.totalProjects}',
             'Projects',
             Icons.folder_special_rounded,
-            Colors.blue,
+            _dashGold,
           ),
         ),
         const SizedBox(width: 16),
@@ -169,7 +175,7 @@ class DashboardScreen extends StatelessWidget {
             '${appProvider.completedProjects}',
             'Completed',
             Icons.check_circle_rounded,
-            Colors.green,
+            _dashGreen,
           ),
         ),
         const SizedBox(width: 16),
@@ -179,7 +185,7 @@ class DashboardScreen extends StatelessWidget {
             '${appProvider.upcomingDeadlines}',
             'Deadlines',
             Icons.schedule_rounded,
-            Colors.orange,
+            _dashOrange,
           ),
         ),
       ],
@@ -190,13 +196,20 @@ class DashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          colors: [
+            color.withOpacity(0.25),
+            Colors.white.withOpacity(0.08),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: color.withOpacity(0.3),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -252,7 +265,7 @@ class DashboardScreen extends StatelessWidget {
               child: _buildActionButton(
                 'Add Project',
                 Icons.add_rounded,
-                Colors.blue,
+                _dashPurple,
                 () => _showCreateProjectDialog(context),
               ),
             ),
@@ -261,7 +274,7 @@ class DashboardScreen extends StatelessWidget {
               child: _buildActionButton(
                 'New Note',
                 Icons.note_add_rounded,
-                Colors.green,
+                _dashGreen,
                 () => _showCreateNoteDialog(context),
               ),
             ),
@@ -274,7 +287,7 @@ class DashboardScreen extends StatelessWidget {
               child: _buildActionButton(
                 'New Event',
                 Icons.event_rounded,
-                Colors.purple,
+                _dashOrange,
                 () => _showCreateEventDialog(context),
               ),
             ),
@@ -283,7 +296,7 @@ class DashboardScreen extends StatelessWidget {
               child: _buildActionButton(
                 'New Idea',
                 Icons.lightbulb_rounded,
-                Colors.orange,
+                _dashGold,
                 () => _showCreateIdeaDialog(context),
               ),
             ),
@@ -299,13 +312,16 @@ class DashboardScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+          color: Colors.white.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.white.withOpacity(0.08)),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.25),
+              blurRadius: 15,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -313,13 +329,17 @@ class DashboardScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  colors: [color, color.withOpacity(0.6)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
                     color: color.withOpacity(0.3),
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
                   ),
                 ],
               ),
@@ -329,8 +349,8 @@ class DashboardScreen extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: color,
-                fontSize: 13,
+                color: Colors.white,
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.center,

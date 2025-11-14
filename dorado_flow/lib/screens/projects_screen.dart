@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../models/project.dart';
 import '../providers/app_provider.dart';
 
+const _chipHighlight = Color(0xFFFFE066);
+
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({super.key});
 
@@ -33,6 +35,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         }
 
         return Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: const Text('Projects'),
             backgroundColor: Colors.transparent,
@@ -93,8 +96,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           _selectedType = selected ? type : null;
         });
       },
-      selectedColor: Colors.blue.withOpacity(0.2),
-      checkmarkColor: Colors.blue,
+      selectedColor: _chipHighlight.withOpacity(0.25),
+      checkmarkColor: Colors.black,
     );
   }
 
@@ -120,20 +123,20 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.folder_open_rounded, size: 64, color: Colors.grey[400]),
+          Icon(Icons.folder_open_rounded, size: 64, color: Colors.white54),
           const SizedBox(height: 16),
           Text(
             'No projects found',
             style: TextStyle(
               fontSize: 18,
-              color: Colors.grey[600],
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Create your first project to get started',
-            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            style: TextStyle(fontSize: 14, color: Colors.white70),
           ),
         ],
       ),
@@ -148,8 +151,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -189,7 +192,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     ),
                     Text(
                       project.description,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  style: const TextStyle(fontSize: 14, color: Colors.white70),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -220,12 +223,12 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                   children: [
                     Text(
                       '${(progress * 100).toInt()}% complete',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: const TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                     const SizedBox(height: 4),
                     LinearProgressIndicator(
                       value: progress,
-                      backgroundColor: Colors.grey.withOpacity(0.2),
+                      backgroundColor: Colors.white.withOpacity(0.1),
                       valueColor: AlwaysStoppedAnimation<Color>(color),
                       minHeight: 6,
                     ),
@@ -254,11 +257,11 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.schedule_rounded, size: 16, color: Colors.grey[600]),
+                const Icon(Icons.schedule_rounded, size: 16, color: Colors.white70),
                 const SizedBox(width: 4),
                 Text(
                   'Deadline: ${_formatDate(project.deadline!)}',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  style: const TextStyle(fontSize: 12, color: Colors.white70),
                 ),
               ],
             ),

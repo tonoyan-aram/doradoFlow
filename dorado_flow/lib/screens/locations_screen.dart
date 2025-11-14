@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
 
+const _locationAccent = Color(0xFF13CF8D);
+
 class LocationsScreen extends StatelessWidget {
   const LocationsScreen({super.key});
 
@@ -10,6 +12,7 @@ class LocationsScreen extends StatelessWidget {
     return Consumer<AppProvider>(
       builder: (context, appProvider, child) {
         return Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: const Text('Locations'),
             backgroundColor: Colors.transparent,
@@ -22,7 +25,7 @@ class LocationsScreen extends StatelessWidget {
                   itemCount: appProvider.locations.length,
                   itemBuilder: (context, index) {
                     final location = appProvider.locations[index];
-                    return _buildLocationCard(location);
+                    return _buildLocationCard(context, location);
                   },
                 ),
         );
@@ -35,33 +38,33 @@ class LocationsScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.location_on_rounded, size: 64, color: Colors.grey[400]),
+          Icon(Icons.location_on_rounded, size: 64, color: Colors.white54),
           const SizedBox(height: 16),
           Text(
             'No locations yet',
             style: TextStyle(
               fontSize: 18,
-              color: Colors.grey[600],
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Add your first location to get started',
-            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            style: const TextStyle(fontSize: 14, color: Colors.white70),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLocationCard(dynamic location) {
+  Widget _buildLocationCard(BuildContext context, dynamic location) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -78,12 +81,12 @@ class LocationsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
+                  color: _locationAccent.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.location_on_rounded,
-                  color: Colors.blue,
+                  color: Colors.white,
                   size: 20,
                 ),
               ),
@@ -102,7 +105,7 @@ class LocationsScreen extends StatelessWidget {
                     if (location.address != null && location.address.isNotEmpty)
                       Text(
                         location.address,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        style: const TextStyle(fontSize: 14, color: Colors.white70),
                       ),
                   ],
                 ),
@@ -113,7 +116,7 @@ class LocationsScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               location.description,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              style: const TextStyle(fontSize: 14, color: Colors.white70),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -135,12 +138,12 @@ class LocationsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.1),
+        color: Colors.white.withOpacity(0.12),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         tag,
-        style: const TextStyle(fontSize: 12, color: Colors.grey),
+        style: const TextStyle(fontSize: 12, color: Colors.white70),
       ),
     );
   }

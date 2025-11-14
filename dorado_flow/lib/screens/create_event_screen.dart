@@ -3,6 +3,10 @@ import 'package:provider/provider.dart';
 import '../models/event.dart';
 import '../providers/app_provider.dart';
 
+const _eventPurple = Color(0xFF7C3AED);
+const _eventOrange = Color(0xFFFF9F45);
+const _eventGold = Color(0xFFFFE066);
+
 class CreateEventScreen extends StatefulWidget {
   final EventType? preselectedType;
   
@@ -49,6 +53,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Create Event'),
         backgroundColor: Colors.transparent,
@@ -59,8 +64,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             child: const Text(
               'Save',
               style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.w600,
+                color: _eventGold,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -71,39 +76,28 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _buildEventTypeSection(),
+            _buildEventTypeSection(context),
             const SizedBox(height: 24),
-            _buildBasicInfoSection(),
+            _buildBasicInfoSection(context),
             const SizedBox(height: 24),
-            _buildDateTimeSection(),
+            _buildDateTimeSection(context),
             const SizedBox(height: 24),
-            _buildLocationSection(),
+            _buildLocationSection(context),
             const SizedBox(height: 24),
-            _buildTagsSection(),
+            _buildTagsSection(context),
             const SizedBox(height: 24),
-            _buildNotesSection(),
+            _buildNotesSection(context),
             const SizedBox(height: 32),
-            _buildSaveButton(),
+            _buildSaveButton(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildEventTypeSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget _buildEventTypeSection(BuildContext context) {
+    return _buildFruityCard(
+      context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -125,15 +119,26 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: isSelected 
-                        ? _getEventTypeColor(type).withOpacity(0.2)
-                        : Colors.grey.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                      colors: isSelected
+                          ? [_getEventTypeColor(type), _getEventTypeColor(type).withOpacity(0.65)]
+                          : [Colors.white.withOpacity(0.08), Colors.white.withOpacity(0.02)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(24),
                     border: Border.all(
                       color: isSelected 
-                          ? _getEventTypeColor(type)
-                          : Colors.grey.withOpacity(0.3),
+                          ? Colors.white.withOpacity(0.8)
+                          : Colors.white.withOpacity(0.15),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _getEventTypeColor(type).withOpacity(isSelected ? 0.3 : 0.08),
+                        blurRadius: 14,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -146,12 +151,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                       Text(
                         _getEventTypeName(type),
                         style: TextStyle(
-                          color: isSelected 
-                              ? _getEventTypeColor(type)
-                              : Colors.grey[600],
+                          color: Colors.white,
                           fontWeight: isSelected 
-                              ? FontWeight.w600 
-                              : FontWeight.normal,
+                              ? FontWeight.w700 
+                              : FontWeight.w500,
                         ),
                       ),
                     ],
@@ -165,20 +168,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Widget _buildBasicInfoSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget _buildBasicInfoSection(BuildContext context) {
+    return _buildFruityCard(
+      context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -219,20 +211,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Widget _buildDateTimeSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget _buildDateTimeSection(BuildContext context) {
+    return _buildFruityCard(
+      context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -249,6 +230,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             value: _isAllDay,
             onChanged: (value) => setState(() => _isAllDay = value),
             activeColor: _getEventTypeColor(_selectedType),
+            contentPadding: EdgeInsets.zero,
           ),
           const SizedBox(height: 16),
           ListTile(
@@ -257,8 +239,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             subtitle: Text(_formatDate(_selectedDate)),
             onTap: _selectStartDate,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-              side: BorderSide(color: Colors.grey.withOpacity(0.3)),
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(color: Colors.white.withOpacity(0.15)),
             ),
           ),
           if (!_isAllDay) ...[
@@ -269,8 +251,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               subtitle: Text(_formatTime(_selectedTime)),
               onTap: _selectStartTime,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.white.withOpacity(0.15)),
               ),
             ),
           ],
@@ -289,6 +271,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               }
             }),
             activeColor: _getEventTypeColor(_selectedType),
+            contentPadding: EdgeInsets.zero,
           ),
           if (_hasEndDate) ...[
             const SizedBox(height: 8),
@@ -298,8 +281,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               subtitle: Text(_endDate != null ? _formatDate(_endDate!) : 'Select end date'),
               onTap: _selectEndDate,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-                side: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.white.withOpacity(0.15)),
               ),
             ),
             if (!_isAllDay) ...[
@@ -309,10 +292,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 title: const Text('End Time'),
                 subtitle: Text(_endTime != null ? _formatTime(_endTime!) : 'Select end time'),
                 onTap: _selectEndTime,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  side: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.white.withOpacity(0.15)),
+              ),
               ),
             ],
           ],
@@ -321,20 +304,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Widget _buildLocationSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget _buildLocationSection(BuildContext context) {
+    return _buildFruityCard(
+      context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -360,20 +332,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Widget _buildTagsSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget _buildTagsSection(BuildContext context) {
+    return _buildFruityCard(
+      context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -399,7 +360,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             'Example: photography, portrait, studio',
             style: TextStyle(
               fontSize: 12,
-              color: Colors.grey[600],
+              color: Colors.white70,
             ),
           ),
         ],
@@ -407,20 +368,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Widget _buildNotesSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget _buildNotesSection(BuildContext context) {
+    return _buildFruityCard(
+      context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -446,7 +396,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: 50,
@@ -456,8 +406,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           backgroundColor: _getEventTypeColor(_selectedType),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
+          elevation: 8,
+          shadowColor: _getEventTypeColor(_selectedType).withOpacity(0.4),
         ),
         child: const Text(
           'Create Event',
@@ -467,6 +419,25 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFruityCard(BuildContext context, {required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 
@@ -525,19 +496,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Color _getEventTypeColor(EventType type) {
     switch (type) {
       case EventType.meeting:
-        return Colors.blue;
+        return _eventPurple;
       case EventType.deadline:
-        return Colors.red;
+        return Colors.redAccent;
       case EventType.shoot:
-        return Colors.purple;
+        return _eventOrange;
       case EventType.recording:
-        return Colors.green;
+        return const Color(0xFF10B981);
       case EventType.exhibition:
-        return Colors.orange;
+        return Colors.deepOrangeAccent;
       case EventType.concert:
-        return Colors.pink;
+        return const Color(0xFFEC4899);
       case EventType.other:
-        return Colors.grey;
+        return Colors.white70;
     }
   }
 

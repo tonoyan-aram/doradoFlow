@@ -1,4 +1,4 @@
-package com.chickencluck.app
+package com.fruitsglory.app
 
 import io.flutter.embedding.android.FlutterActivity
 

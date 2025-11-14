@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_provider.dart';
 
+const _knowledgeAccent = Color(0xFFFF9F45);
+
 class KnowledgeScreen extends StatelessWidget {
   const KnowledgeScreen({super.key});
 
@@ -10,6 +12,7 @@ class KnowledgeScreen extends StatelessWidget {
     return Consumer<AppProvider>(
       builder: (context, appProvider, child) {
         return Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: const Text('Knowledge Library'),
             backgroundColor: Colors.transparent,
@@ -22,7 +25,7 @@ class KnowledgeScreen extends StatelessWidget {
                   itemCount: appProvider.knowledgeArticles.length,
                   itemBuilder: (context, index) {
                     final article = appProvider.knowledgeArticles[index];
-                    return _buildArticleCard(article);
+                    return _buildArticleCard(context, article);
                   },
                 ),
         );
@@ -35,33 +38,33 @@ class KnowledgeScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.menu_book_rounded, size: 64, color: Colors.grey[400]),
+          Icon(Icons.menu_book_rounded, size: 64, color: Colors.white54),
           const SizedBox(height: 16),
           Text(
             'No articles yet',
             style: TextStyle(
               fontSize: 18,
-              color: Colors.grey[600],
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Add knowledge articles to build your library',
-            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            style: const TextStyle(fontSize: 14, color: Colors.white70),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildArticleCard(dynamic article) {
+  Widget _buildArticleCard(BuildContext context, dynamic article) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -78,12 +81,12 @@ class KnowledgeScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
+                  color: _knowledgeAccent.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.article_rounded,
-                  color: Colors.purple,
+                  color: Colors.white,
                   size: 20,
                 ),
               ),
@@ -101,7 +104,7 @@ class KnowledgeScreen extends StatelessWidget {
                     ),
                     Text(
                       article.content,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      style: const TextStyle(fontSize: 14, color: Colors.white70),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -129,12 +132,12 @@ class KnowledgeScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.1),
+        color: Colors.white.withOpacity(0.12),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         tag,
-        style: const TextStyle(fontSize: 12, color: Colors.grey),
+        style: const TextStyle(fontSize: 12, color: Colors.white70),
       ),
     );
   }

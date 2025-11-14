@@ -6,14 +6,16 @@ import '../models/idea.dart';
 import '../models/task.dart';
 import '../providers/app_provider.dart';
 
+const _tagHighlight = Color(0xFFFFE066);
+
 class ContentCards {
-  static Widget buildEventCard(Event event, AppProvider appProvider) {
+  static Widget buildEventCard(BuildContext context, Event event, AppProvider appProvider) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -35,7 +37,7 @@ class ContentCards {
                 ),
                 child: Icon(
                   _getEventTypeIcon(event.type),
-                  color: _getEventTypeColor(event.type),
+                  color: Colors.white,
                   size: 20,
                 ),
               ),
@@ -54,7 +56,7 @@ class ContentCards {
                     if (event.description != null && event.description!.isNotEmpty)
                       Text(
                         event.description!,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        style: const TextStyle(fontSize: 14, color: Colors.white70),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -70,20 +72,20 @@ class ContentCards {
           const SizedBox(height: 12),
           Row(
             children: [
-              Icon(Icons.access_time_rounded, size: 16, color: Colors.grey[600]),
+              const Icon(Icons.access_time_rounded, size: 16, color: Colors.white70),
               const SizedBox(width: 4),
               Text(
                 _formatEventDate(event),
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: const TextStyle(fontSize: 12, color: Colors.white70),
               ),
               if (event.location != null && event.location!.isNotEmpty) ...[
                 const SizedBox(width: 16),
-                Icon(Icons.location_on_rounded, size: 16, color: Colors.grey[600]),
+                const Icon(Icons.location_on_rounded, size: 16, color: Colors.white70),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
                     event.location!,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    style: const TextStyle(fontSize: 12, color: Colors.white70),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -103,13 +105,13 @@ class ContentCards {
     );
   }
 
-  static Widget buildNoteCard(Note note, AppProvider appProvider) {
+  static Widget buildNoteCard(BuildContext context, Note note, AppProvider appProvider) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -133,7 +135,7 @@ class ContentCards {
                 ),
                 child: Icon(
                   note.isImportant ? Icons.priority_high_rounded : Icons.note_rounded,
-                  color: note.isImportant ? Colors.orange : Colors.blue,
+                  color: Colors.white,
                   size: 20,
                 ),
               ),
@@ -151,7 +153,7 @@ class ContentCards {
                     ),
                     Text(
                       note.content,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      style: const TextStyle(fontSize: 14, color: Colors.white70),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -167,19 +169,19 @@ class ContentCards {
           const SizedBox(height: 12),
           Row(
             children: [
-              Icon(Icons.access_time_rounded, size: 16, color: Colors.grey[600]),
+              const Icon(Icons.access_time_rounded, size: 16, color: Colors.white70),
               const SizedBox(width: 4),
               Text(
                 _formatDate(note.createdAt),
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: const TextStyle(fontSize: 12, color: Colors.white70),
               ),
               if (note.isImportant) ...[
                 const SizedBox(width: 16),
-                Icon(Icons.priority_high_rounded, size: 16, color: Colors.orange),
+                const Icon(Icons.priority_high_rounded, size: 16, color: _tagHighlight),
                 const SizedBox(width: 4),
                 Text(
                   'Important',
-                  style: TextStyle(fontSize: 12, color: Colors.orange, fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontSize: 12, color: _tagHighlight, fontWeight: FontWeight.w600),
                 ),
               ],
             ],
@@ -197,13 +199,13 @@ class ContentCards {
     );
   }
 
-  static Widget buildIdeaCard(Idea idea, AppProvider appProvider) {
+  static Widget buildIdeaCard(BuildContext context, Idea idea, AppProvider appProvider) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -223,11 +225,7 @@ class ContentCards {
                   color: Colors.purple.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(
-                  Icons.lightbulb_rounded,
-                  color: Colors.purple,
-                  size: 20,
-                ),
+                child: const Icon(Icons.lightbulb_rounded, color: Colors.white, size: 20),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -243,7 +241,7 @@ class ContentCards {
                     ),
                     Text(
                       idea.description,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      style: const TextStyle(fontSize: 14, color: Colors.white70),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -256,7 +254,7 @@ class ContentCards {
                     onPressed: () => appProvider.toggleIdeaFavorite(idea.id),
                     icon: Icon(
                       idea.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                      color: idea.isFavorite ? Colors.red : Colors.grey,
+                      color: idea.isFavorite ? Colors.pinkAccent : Colors.white54,
                     ),
                   ),
                   IconButton(
@@ -270,11 +268,11 @@ class ContentCards {
           const SizedBox(height: 12),
           Row(
             children: [
-              Icon(Icons.access_time_rounded, size: 16, color: Colors.grey[600]),
+              const Icon(Icons.access_time_rounded, size: 16, color: Colors.white70),
               const SizedBox(width: 4),
               Text(
                 _formatDate(idea.createdAt),
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: const TextStyle(fontSize: 12, color: Colors.white70),
               ),
             ],
           ),
@@ -291,13 +289,13 @@ class ContentCards {
     );
   }
 
-  static Widget buildTaskCard(Task task, AppProvider appProvider) {
+  static Widget buildTaskCard(BuildContext context, Task task, AppProvider appProvider) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -319,7 +317,7 @@ class ContentCards {
                 ),
                 child: Icon(
                   _getTaskPriorityIcon(task.priority),
-                  color: _getTaskPriorityColor(task.priority),
+                  color: Colors.white,
                   size: 20,
                 ),
               ),
@@ -338,7 +336,7 @@ class ContentCards {
                     if (task.description != null && task.description!.isNotEmpty)
                       Text(
                         task.description!,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        style: const TextStyle(fontSize: 14, color: Colors.white70),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -367,11 +365,11 @@ class ContentCards {
           const SizedBox(height: 12),
           Row(
             children: [
-              Icon(Icons.access_time_rounded, size: 16, color: Colors.grey[600]),
+              const Icon(Icons.access_time_rounded, size: 16, color: Colors.white70),
               const SizedBox(width: 4),
               Text(
                 _formatDate(task.createdAt),
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                style: const TextStyle(fontSize: 12, color: Colors.white70),
               ),
               const SizedBox(width: 16),
               Container(

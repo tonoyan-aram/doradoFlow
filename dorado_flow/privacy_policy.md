@@ -169,3 +169,4 @@ By using Chicken Cluck, you consent to this Privacy Policy and agree to its term
 
 **This Privacy Policy is effective as of [Date] and applies to all users of Chicken Cluck.**
 
+

@@ -7,6 +7,8 @@ import '../models/note.dart';
 import '../models/idea.dart';
 import '../models/task.dart';
 
+const _tabAccent = Color(0xFFFFE066);
+
 class ContentScreen extends StatefulWidget {
   const ContentScreen({super.key});
 
@@ -33,15 +35,20 @@ class _ContentScreenState extends State<ContentScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Content'),
         bottom: TabBar(
           controller: _tabController,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          indicatorColor: _tabAccent,
+          indicatorWeight: 3,
           tabs: const [
-            Tab(text: 'Events', icon: Icon(Icons.event_rounded)),
-            Tab(text: 'Notes', icon: Icon(Icons.note_rounded)),
+            Tab(text: 'Events', icon: Icon(Icons.casino_rounded)),
+            Tab(text: 'Notes', icon: Icon(Icons.auto_stories_rounded)),
             Tab(text: 'Ideas', icon: Icon(Icons.lightbulb_rounded)),
-            Tab(text: 'Tasks', icon: Icon(Icons.task_rounded)),
+            Tab(text: 'Tasks', icon: Icon(Icons.auto_fix_high_rounded)),
           ],
         ),
         actions: [
@@ -118,7 +125,7 @@ class EventsListTab extends StatelessWidget {
                 itemCount: events.length,
                 itemBuilder: (context, index) {
                   final event = events[index];
-                  return ContentCards.buildEventCard(event, appProvider);
+                  return ContentCards.buildEventCard(context, event, appProvider);
                 },
               );
       },
@@ -171,7 +178,7 @@ class NotesListTab extends StatelessWidget {
                 itemCount: notes.length,
                 itemBuilder: (context, index) {
                   final note = notes[index];
-                  return ContentCards.buildNoteCard(note, appProvider);
+                  return ContentCards.buildNoteCard(context, note, appProvider);
                 },
               );
       },
@@ -224,7 +231,7 @@ class IdeasListTab extends StatelessWidget {
                 itemCount: ideas.length,
                 itemBuilder: (context, index) {
                   final idea = ideas[index];
-                  return ContentCards.buildIdeaCard(idea, appProvider);
+                  return ContentCards.buildIdeaCard(context, idea, appProvider);
                 },
               );
       },
@@ -277,7 +284,7 @@ class TasksListTab extends StatelessWidget {
                 itemCount: tasks.length,
                 itemBuilder: (context, index) {
                   final task = tasks[index];
-                  return ContentCards.buildTaskCard(task, appProvider);
+                  return ContentCards.buildTaskCard(context, task, appProvider);
                 },
               );
       },
@@ -291,20 +298,20 @@ Widget _buildEmptyState(IconData icon, String title, String subtitle) {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 64, color: Colors.grey[400]),
+        Icon(icon, size: 64, color: Colors.white54),
         const SizedBox(height: 16),
         Text(
           title,
           style: TextStyle(
             fontSize: 18,
-            color: Colors.grey[600],
+            color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 8),
         Text(
           subtitle,
-          style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+          style: const TextStyle(fontSize: 14, color: Colors.white70),
         ),
       ],
     ),

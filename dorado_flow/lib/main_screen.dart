@@ -15,6 +15,12 @@ import 'screens/content_screen.dart';
 import 'screens/locations_screen.dart';
 import 'screens/knowledge_screen.dart';
 import 'screens/favorites_screen.dart';
+import 'screens/ai_assistant_screen.dart';
+
+const _fruitPurple = Color(0xFF7C3AED);
+const _fruitGold = Color(0xFFFFE066);
+const _fruitOrange = Color(0xFFFF9F45);
+const _fruitGreen = Color(0xFF13CF8D);
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -33,6 +39,7 @@ class _MainScreenState extends State<MainScreen> {
     const ContentScreen(),
     const LocationsScreen(),
     const KnowledgeScreen(),
+    const AiAssistantScreen(),
   ];
 
   void _onFabTap(BuildContext context) {
@@ -52,6 +59,9 @@ class _MainScreenState extends State<MainScreen> {
       case 4:
         _showCreateKnowledgeDialog(context);
         break;
+      case 5:
+        _showQuickAddDialog(context);
+        break;
     }
   }
 
@@ -61,8 +71,16 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF2A0F38),
+              Color(0xFF421654),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          border: Border.all(color: Colors.white.withOpacity(0.08)),
         ),
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -79,11 +97,11 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(height: 24),
             Text(
               'Quick Add',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).textTheme.titleLarge?.color,
-              ),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                  ),
             ),
             const SizedBox(height: 24),
             GridView.count(
@@ -94,27 +112,27 @@ class _MainScreenState extends State<MainScreen> {
               childAspectRatio: 1.2,
               children: [
                 _buildQuickAddOption(
-                  icon: Icons.event_rounded,
+                  icon: Icons.casino_rounded,
                   title: 'Event',
-                  color: const Color(0xFF3B82F6),
+                  color: _fruitPurple,
                   onTap: () => _createEvent(context),
                 ),
                 _buildQuickAddOption(
-                  icon: Icons.note_add_rounded,
+                  icon: Icons.local_fire_department_rounded,
                   title: 'Note',
-                  color: const Color(0xFF10B981),
+                  color: _fruitGreen,
                   onTap: () => _createNote(context),
                 ),
                 _buildQuickAddOption(
-                  icon: Icons.lightbulb_rounded,
+                  icon: Icons.emoji_objects_rounded,
                   title: 'Idea',
-                  color: const Color(0xFFF59E0B),
+                  color: _fruitOrange,
                   onTap: () => _createIdea(context),
                 ),
                 _buildQuickAddOption(
-                  icon: Icons.task_rounded,
+                  icon: Icons.auto_fix_high_rounded,
                   title: 'Task',
-                  color: const Color(0xFF8B5CF6),
+                  color: _fruitGold,
                   onTap: () => _createTask(context),
                 ),
               ],
@@ -137,27 +155,34 @@ class _MainScreenState extends State<MainScreen> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [color.withOpacity(0.15), color.withOpacity(0.05)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.3), width: 1.5),
+          color: Colors.white.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.white.withOpacity(0.12)),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.25),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(14),
+                gradient: LinearGradient(
+                  colors: [color, color.withOpacity(0.65)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                     color: color.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
+                    blurRadius: 12,
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
@@ -167,8 +192,8 @@ class _MainScreenState extends State<MainScreen> {
             Text(
               title,
               style: TextStyle(
-                color: color,
-                fontSize: 14,
+                color: Colors.white,
+                fontSize: 15,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -926,8 +951,11 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final appProvider = Provider.of<AppProvider>(context);
     return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBody: true,
       drawer: _buildDrawer(context, appProvider),
       appBar: AppBar(
+        titleSpacing: 0,
         title: _buildSearchBar(context, appProvider),
         actions: [
           IconButton(
@@ -938,49 +966,73 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       body: IndexedStack(index: _currentIndex, children: _screens),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(40),
+            border: Border.all(color: Colors.white.withOpacity(0.12)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.12),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: BottomNavigationBar(
+              backgroundColor: Colors.transparent,
+              currentIndex: _currentIndex,
+              onTap: (index) => setState(() => _currentIndex = index),
+              type: BottomNavigationBarType.fixed,
+              showUnselectedLabels: false,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.casino_rounded),
+                  label: 'Dashboard',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.workspace_premium_rounded),
+                  label: 'Projects',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.auto_awesome_mosaic_rounded),
+                  label: 'Content',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.pin_drop_rounded),
+                  label: 'Locations',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.menu_book_rounded),
+                  label: 'Knowledge',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.smart_toy_rounded),
+                  label: 'Assistant',
+                ),
+              ],
             ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Theme.of(context).colorScheme.primary,
-          unselectedItemColor: Colors.grey,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_rounded),
-              label: 'Dashboard',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.folder_special_rounded),
-              label: 'Projects',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.content_copy_rounded),
-              label: 'Content',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.location_on_rounded),
-              label: 'Locations',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book_rounded),
-              label: 'Knowledge',
-            ),
-          ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'fruit-go',
         onPressed: () => _onFabTap(context),
-        child: const Icon(Icons.add_rounded),
+        backgroundColor: _fruitPurple,
+        label: const Text(
+          'GO!',
+          style: TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 18,
+            letterSpacing: 1.2,
+          ),
+        ),
+        icon: const Icon(Icons.play_arrow_rounded, size: 28),
       ),
     );
   }
@@ -1012,7 +1064,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Chicken Cluck',
+                  'Fruits glory',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -1081,22 +1133,39 @@ class _MainScreenState extends State<MainScreen> {
       _searchController.text = searchQuery;
     }
     return Container(
-      height: 40,
+      height: 46,
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Colors.grey[800]
-            : Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(28),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0x33FFFFFF),
+            Color(0x22FFFFFF),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(color: Colors.white.withOpacity(0.25)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: TextField(
         controller: _searchController,
         onChanged: (value) => appProvider.setSearchQuery(value),
         decoration: InputDecoration(
-          hintText: 'Search...',
-          prefixIcon: const Icon(Icons.search_rounded, size: 20),
+          hintText: 'Spin your ideas...',
+          hintStyle: TextStyle(
+            color: Colors.white.withOpacity(0.7),
+            fontWeight: FontWeight.w500,
+          ),
+          prefixIcon: Icon(Icons.search_rounded, size: 22, color: Colors.white.withOpacity(0.85)),
           suffixIcon: searchQuery.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear_rounded, size: 20),
+                  icon: const Icon(Icons.clear_rounded, size: 20, color: Colors.white),
                   onPressed: () {
                     _searchController.clear();
                     appProvider.clearSearch();
@@ -1104,8 +1173,9 @@ class _MainScreenState extends State<MainScreen> {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
       ),
     );
   }
